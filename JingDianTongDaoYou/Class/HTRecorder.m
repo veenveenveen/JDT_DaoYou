@@ -16,28 +16,26 @@
 
 @property (nonatomic, strong) GCDAsyncUdpSocket *udpSocket;
 @property (strong, nonatomic) RecordAmrCode *recordAmrCode;
+@property (nonatomic, strong) NSData *pcmData;
 
 @end
 
 @implementation HTRecorder
 
-- (RecordAmrCode *)recordAmrCode{
-    if (_recordAmrCode == nil) {
-        _recordAmrCode = [[RecordAmrCode alloc] init];
-    }
-    return _recordAmrCode;
-}
-
 - (instancetype) init{
     self = [super init];
     if (self){
         dispatch_queue_t global = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-        GCDAsyncUdpSocket *udpSocket = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:global];
-        self.udpSocket = udpSocket;
-        [self.udpSocket bindToPort:kDefaultPort error:nil];
+        _udpSocket = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:global];
+        NSError *error;
+        [self.udpSocket bindToPort:kDefaultPort error:&error];
+        if (error != nil) {
+            NSLog(@"error: %@",error.description);
+        }
+        [self initAudioRecording];
+        _recordAmrCode = [[RecordAmrCode alloc] init];
         self.isRecording = NO;
     }
-    
     return self;
 }
 //设置录音格式
@@ -57,35 +55,22 @@
     _aqc.mDataFormat.mBytesPerFrame = 2;
 }
 
-//初始化会话
-- (void)initSession
-{
-    UInt32 audioRouteOverride = kAudioSessionOverrideAudioRoute_Speaker;  //设置成话筒模式
-    AudioSessionSetProperty (kAudioSessionProperty_OverrideAudioRoute,
-                             sizeof (audioRouteOverride),
-                             &audioRouteOverride);
-    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-    
-    [audioSession setCategory:AVAudioSessionCategoryRecord error:nil];
-    [audioSession setActive:YES error:nil];
-    
-}
-
 void inputBufferHandler(void *inUserData, AudioQueueRef inAQ,AudioQueueBufferRef inBuffer, const AudioTimeStamp *inStartTime, unsigned long inNumPackets, const AudioStreamPacketDescription *inPacketDesc){
     
     NSLog(@"在录音回调函数中。。。");
     
+    NSData *amrData = nil;
+    
     HTRecorder *recorder = (__bridge HTRecorder *) inUserData;
     if (inNumPackets > 0) {
         NSLog(@"input buffer: %u", (unsigned int)inBuffer->mAudioDataByteSize);
-        NSData *pcmData = [[NSData alloc] initWithBytes:inBuffer->mAudioData length:inBuffer->mAudioDataByteSize];
-        if (pcmData && pcmData.length > 0) {
-            NSData *amrData = [recorder.recordAmrCode encodePCMDataToAMRData:pcmData];
+        recorder.pcmData = [NSData dataWithBytesNoCopy:inBuffer->mAudioData length:inBuffer->mAudioDataByteSize];
+        if (recorder.pcmData && recorder.pcmData.length > 0) {
+            amrData = [recorder.recordAmrCode encodePCMDataToAMRData:recorder.pcmData];
             if (recorder.isRecording) {
                 [recorder.udpSocket sendData:amrData toHost:kDefaultIP port:kDefaultPort withTimeout:-1 tag:0];
-                pcmData = nil;
-                amrData = nil;
             }
+            recorder.pcmData = nil;
         }
     }
     if (recorder.isRecording) {
@@ -93,40 +78,40 @@ void inputBufferHandler(void *inUserData, AudioQueueRef inAQ,AudioQueueBufferRef
     }
 }
 
-//开始录音
-- (void)startRecording{
+- (void)initAudioRecording{
     //设置录音格式
     [self setAudioFormat:kAudioFormatLinearPCM andSampleRate:kSamplingRate];
-    //初始化会话
-    [self initSession];
     //创建一个录制音频队列
     AudioQueueNewInput(&_aqc.mDataFormat, (void *)inputBufferHandler, (__bridge void * _Nullable)(self), NULL, NULL, 0, &_aqc.queue);
-
+    
     //创建录制音频队列缓冲区
     for (int i = 0; i < kNumberBuffers; i++) {
         AudioQueueAllocateBuffer(_aqc.queue, kDefaultInputBufferSize, &_aqc.mBuffers[i]);
         AudioQueueEnqueueBuffer(_aqc.queue, _aqc.mBuffers[i], 0, NULL);//将 _audioBuffers[i]添加到队列中
     }
-    // 开启录制队列
-    AudioQueueStart(_aqc.queue, NULL);
-    self.isRecording = YES;
 }
 
-- (void)startAudioRecording{
-   
+//开始录音
+- (void)startRecording{
+    if (!self.isRecording){
+        self.isRecording = YES;
+        // 开启录制队列
+        AudioQueueStart(_aqc.queue, NULL);
+    }
 }
+
+
 
 //停止录音
 -(void)stopRecording{
+    NSLog(@"stop recording");
     
-    NSLog(@"stop recording out\n");
     if (self.isRecording){
+//        NSString *ss = @"111";
+//        [_udpSocket sendData:[ss dataUsingEncoding:NSUTF8StringEncoding] toHost:kDefaultIP port:kDefaultPort withTimeout:-1 tag:0];
+//        [_udpSocket close];
+        AudioQueuePause(_aqc.queue);
         self.isRecording = NO;
-        
-        //停止录音队列和移除缓冲区,以及关闭session，这里无需考虑成功与否
-//        AudioQueueStop(_aqc.queue, true);
-////        AudioQueueDispose(_aqc.queue, YES);
-//        [[AVAudioSession sharedInstance] setActive:NO error:nil];
     }
 }
 

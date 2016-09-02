@@ -9,6 +9,8 @@
 #import "ViewController.h"
 
 @interface ViewController ()
+@property (weak, nonatomic) IBOutlet UIButton *recorderButton;
+@property (weak, nonatomic) IBOutlet UILabel *recorderLable;
 
 @end
 
@@ -21,13 +23,27 @@
 }
 
 #pragma mark - 开始对讲/结束对讲
+- (IBAction)recordOrPause:(id)sender {
+    if (_recorder.isRecording) {
+        [self.recorderButton setImage:[UIImage imageNamed:@"record_false"] forState:UIControlStateNormal];
+        self.recorderLable.hidden = YES;
+        [_recorder stopRecording];
+        _recorder.isRecording = NO;
+    }
+    else if (!_recorder.isRecording) {
+        [self.recorderButton setImage:[UIImage imageNamed:@"record_true"] forState:UIControlStateNormal];
+        self.recorderLable.hidden = NO;
+        [_recorder startRecording];
+        _recorder.isRecording = YES;
+    }
+}
 
--(IBAction)startRecord:(id)sender{
-    [_recorder startRecording];
-}
--(IBAction)stopRecord:(id)sender{
-    [_recorder stopRecording];
-}
+//-(IBAction)startRecord:(id)sender{
+//    [_recorder startRecording];
+//}
+//-(IBAction)stopRecord:(id)sender{
+//    [_recorder stopRecording];
+//}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
