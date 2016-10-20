@@ -215,6 +215,7 @@
 				TargetAttributes = {
 					903C90E11D3000DE000EAF08 = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = 2Z7NL663JA;
 					};
 				};
 			};
@@ -421,7 +422,9 @@
 			baseConfigurationReference = 6B935575BAA9383EF3092E98 /* Pods-JingDianTongDaoYou.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 2Z7NL663JA;
 				INFOPLIST_FILE = JingDianTongDaoYou/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -437,7 +440,9 @@
 			baseConfigurationReference = 659A64B7366030705956C683 /* Pods-JingDianTongDaoYou.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 2Z7NL663JA;
 				INFOPLIST_FILE = JingDianTongDaoYou/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

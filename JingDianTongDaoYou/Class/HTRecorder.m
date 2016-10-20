@@ -109,7 +109,7 @@ void inputBufferHandler(void *inUserData, AudioQueueRef inAQ,AudioQueueBufferRef
     if (self.isRecording){
 //        NSString *ss = @"111";
 //        [_udpSocket sendData:[ss dataUsingEncoding:NSUTF8StringEncoding] toHost:kDefaultIP port:kDefaultPort withTimeout:-1 tag:0];
-//        [_udpSocket close];
+        [_udpSocket close];
         AudioQueuePause(_aqc.queue);
         self.isRecording = NO;
     }
@@ -121,6 +121,11 @@ void inputBufferHandler(void *inUserData, AudioQueueRef inAQ,AudioQueueBufferRef
 
 -(void)udpSocket:(GCDAsyncUdpSocket *)sock didNotSendDataWithTag:(long)tag dueToError:(NSError *)error{
     NSLog(@"发送数据 Error");
+}
+
+- (void)dealloc {
+    [_udpSocket close];
+    _udpSocket = nil;
 }
 
 
