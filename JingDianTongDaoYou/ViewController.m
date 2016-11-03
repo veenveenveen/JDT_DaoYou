@@ -38,13 +38,6 @@
     }
 }
 
-//-(IBAction)startRecord:(id)sender{
-//    [_recorder startRecording];
-//}
-//-(IBAction)stopRecord:(id)sender{
-//    [_recorder stopRecording];
-//}
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
