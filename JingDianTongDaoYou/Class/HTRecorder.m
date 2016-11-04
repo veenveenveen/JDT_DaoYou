@@ -14,9 +14,6 @@
     AudioQueueRef               inputQueue;//音频队列
     AudioQueueBufferRef         inputBuffers[kNumberBuffers];//数据缓冲
     
-    NSMutableData  *tempData;  //用于输入的pcm切割剩余
-    NSMutableArray *pcmArrs;   //保存切割的pcm数据块
-    
     OSStatus errorStatus;
     
     dispatch_queue_t _encode_send_queue;
@@ -39,10 +36,6 @@
         self.isRecording = NO;
         
         spxCodec = [[HTSpeexCodec alloc] init];
-        
-        tempData = [[NSMutableData alloc] init];
-        pcmArrs = [NSMutableArray array];
-
     }
     return self;
 }
@@ -188,39 +181,5 @@ void inputCallback(void                               *inUserData,
     [udpSocket close];
     udpSocket = nil;
 }
-
-//编码数据
-- (NSData *)encodeToSpeexData:(NSData *)pcmData {
-    NSMutableData *speexData = [NSMutableData data];
-    [self cutDataFromData:pcmData];
-    while ([[self getPCMArrs] count] > 0) {
-        NSData *pcmData = [[self getPCMArrs] objectAtIndex:0];
-        NSData *spxData = [spxCodec encodeToSpeexDataFromData:pcmData];
-        [speexData appendData:spxData];
-        [[self getPCMArrs] removeObjectAtIndex:0];
-    }
-    return speexData;
-}
-//分割数据
-- (void)cutDataFromData:(NSData *)data {
-    int packetSize = FRAME_SIZE * 2;
-    @synchronized (pcmArrs) {
-        [tempData appendData:data];
-        while (tempData.length >= packetSize) {
-            NSData *pData = [NSData dataWithBytes:tempData.bytes length:packetSize];
-            [pcmArrs addObject:pData];
-            Byte *dataPtr = (Byte *)[tempData bytes];
-            dataPtr += packetSize;
-            tempData = [NSMutableData dataWithBytesNoCopy:dataPtr length:tempData.length - packetSize freeWhenDone:NO];
-        }
-    }
-}
-
-- (NSMutableArray *)getPCMArrs {
-    @synchronized(pcmArrs) {
-        return pcmArrs;
-    }
-}
-
 
 @end
