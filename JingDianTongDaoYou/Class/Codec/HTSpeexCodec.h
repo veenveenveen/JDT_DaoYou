@@ -10,25 +10,6 @@
 #import "SpeexAllHeaders.h"
 
 @interface HTSpeexCodec : NSObject
-{
-    int enc_frame_size;//压缩时的帧大小
-    int dec_frame_size;//解压时的帧大小
-    
-    void *enc_state;
-    SpeexBits ebits;
-    BOOL is_enc_init;
-    
-    void *dec_state;
-    SpeexBits dbits;
-    BOOL is_dec_init;
-}
-/*
- * 初始化和销毁
- */
-//- (void)speexEncodeInit;
-//- (void)speexEncodeDestroy;
-//- (void)speexDecodeInit;
-//- (void)speexDecodeDestroy;
 /*
  * 编码
  * pcmData 语音数据
@@ -42,5 +23,4 @@
  * return 解码后的语音数据
  */
 - (NSData *)decodeToPcmDataFromData: (NSData *)speexData;
-
 @end

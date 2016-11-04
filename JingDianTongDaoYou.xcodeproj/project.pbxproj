@@ -15,7 +15,6 @@
 		903C90F51D3000DE000EAF08 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 903C90F31D3000DE000EAF08 /* LaunchScreen.storyboard */; };
 		909BD20D1DC8434C005F540D /* HTRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 909BD20B1DC8434C005F540D /* HTRecorder.m */; };
 		909FF9A41DCC4EDB004C1F2C /* HTSpeexCodec.m in Sources */ = {isa = PBXBuildFile; fileRef = 909FF9A01DCC4EDB004C1F2C /* HTSpeexCodec.m */; };
-		909FF9A51DCC4EDB004C1F2C /* SpeexCodec.m in Sources */ = {isa = PBXBuildFile; fileRef = 909FF9A31DCC4EDB004C1F2C /* SpeexCodec.m */; };
 		909FFA1A1DCC4F1B004C1F2C /* bitwise.c in Sources */ = {isa = PBXBuildFile; fileRef = 909FF9A91DCC4F1B004C1F2C /* bitwise.c */; };
 		909FFA1B1DCC4F1B004C1F2C /* framing.c in Sources */ = {isa = PBXBuildFile; fileRef = 909FF9AA1DCC4F1B004C1F2C /* framing.c */; };
 		909FFA1C1DCC4F1B004C1F2C /* bits.c in Sources */ = {isa = PBXBuildFile; fileRef = 909FF9B11DCC4F1B004C1F2C /* bits.c */; };
@@ -83,8 +82,6 @@
 		909FF99F1DCC4EDB004C1F2C /* HTSpeexCodec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTSpeexCodec.h; sourceTree = "<group>"; };
 		909FF9A01DCC4EDB004C1F2C /* HTSpeexCodec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTSpeexCodec.m; sourceTree = "<group>"; };
 		909FF9A11DCC4EDB004C1F2C /* SpeexAllHeaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpeexAllHeaders.h; sourceTree = "<group>"; };
-		909FF9A21DCC4EDB004C1F2C /* SpeexCodec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpeexCodec.h; sourceTree = "<group>"; };
-		909FF9A31DCC4EDB004C1F2C /* SpeexCodec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpeexCodec.m; sourceTree = "<group>"; };
 		909FF9A71DCC4F1B004C1F2C /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
 		909FF9A91DCC4F1B004C1F2C /* bitwise.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bitwise.c; sourceTree = "<group>"; };
 		909FF9AA1DCC4F1B004C1F2C /* framing.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = framing.c; sourceTree = "<group>"; };
@@ -279,11 +276,9 @@
 		909FF99E1DCC4EDB004C1F2C /* Codec */ = {
 			isa = PBXGroup;
 			children = (
+				909FF9A11DCC4EDB004C1F2C /* SpeexAllHeaders.h */,
 				909FF99F1DCC4EDB004C1F2C /* HTSpeexCodec.h */,
 				909FF9A01DCC4EDB004C1F2C /* HTSpeexCodec.m */,
-				909FF9A11DCC4EDB004C1F2C /* SpeexAllHeaders.h */,
-				909FF9A21DCC4EDB004C1F2C /* SpeexCodec.h */,
-				909FF9A31DCC4EDB004C1F2C /* SpeexCodec.m */,
 			);
 			path = Codec;
 			sourceTree = "<group>";
@@ -592,7 +587,6 @@
 				909FFA4C1DCC4F1C004C1F2C /* window.c in Sources */,
 				909FFA291DCC4F1B004C1F2C /* gain_table.c in Sources */,
 				909FFA1D1DCC4F1B004C1F2C /* buffer.c in Sources */,
-				909FF9A51DCC4EDB004C1F2C /* SpeexCodec.m in Sources */,
 				909FFA3E1DCC4F1C004C1F2C /* smallft.c in Sources */,
 				909FFA2C1DCC4F1B004C1F2C /* hexc_table.c in Sources */,
 				909FFA201DCC4F1B004C1F2C /* exc_10_16_table.c in Sources */,
