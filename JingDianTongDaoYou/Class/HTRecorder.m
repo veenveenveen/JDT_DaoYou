@@ -143,8 +143,8 @@ void inputCallback(void                               *inUserData,
             NSData *pcmData = [NSData dataWithBytes:inBuffer->mAudioData length:inBuffer->mAudioDataByteSize];
             NSLog(@"input buffer: %u", (unsigned int)inBuffer->mAudioDataByteSize);
             //encode data
-            NSData *speexData = [recorder encodeToSpeexData:pcmData];
-//            NSData *speexData = [recorder->spxCodec encodeToSpeexDataFromData:pcmData];//单帧数据测试 320B
+            //NSData *speexData = [recorder encodeToSpeexData:pcmData];
+            NSData *speexData = [recorder->spxCodec encodeToSpeexDataFromData:pcmData];
             NSLog(@"speexData length : %lu",speexData.length);
             [recorder->udpSocket sendData:speexData toHost:kDefaultIP port:kDefaultPort withTimeout:-1 tag:0];
             //            });
@@ -156,6 +156,39 @@ void inputCallback(void                               *inUserData,
         }
     }
 }
+//开始录音
+- (void)startRecording{
+    if (!self.isRecording){
+        self.isRecording = YES;
+        // 开启录制队列
+        errorStatus = AudioQueueStart(inputQueue, NULL);
+        if (errorStatus) {
+            NSLog(@"StartRecord error:%d", (int)errorStatus);
+        }
+    }
+}
+//停止录音
+-(void)stopRecording{
+    if (self.isRecording){
+        [udpSocket close];
+        AudioQueuePause(inputQueue);
+        self.isRecording = NO;
+    }
+}
+
+- (void)udpSocket:(GCDAsyncUdpSocket *)sock didSendDataWithTag:(long)tag{
+    //    NSLog(@"发送数据");
+}
+
+-(void)udpSocket:(GCDAsyncUdpSocket *)sock didNotSendDataWithTag:(long)tag dueToError:(NSError *)error{
+    NSLog(@"发送数据 Error");
+}
+
+- (void)dealloc {
+    [udpSocket close];
+    udpSocket = nil;
+}
+
 //编码数据
 - (NSData *)encodeToSpeexData:(NSData *)pcmData {
     NSMutableData *speexData = [NSMutableData data];
@@ -189,37 +222,5 @@ void inputCallback(void                               *inUserData,
     }
 }
 
-//开始录音
-- (void)startRecording{
-    if (!self.isRecording){
-        self.isRecording = YES;
-        // 开启录制队列
-        errorStatus = AudioQueueStart(inputQueue, NULL);
-        if (errorStatus) {
-            NSLog(@"StartRecord error:%d", (int)errorStatus);
-        }
-    }
-}
-//停止录音
--(void)stopRecording{
-    if (self.isRecording){
-        [udpSocket close];
-        AudioQueuePause(inputQueue);
-        self.isRecording = NO;
-    }
-}
-
-- (void)udpSocket:(GCDAsyncUdpSocket *)sock didSendDataWithTag:(long)tag{
-    //    NSLog(@"发送数据");
-}
-
--(void)udpSocket:(GCDAsyncUdpSocket *)sock didNotSendDataWithTag:(long)tag dueToError:(NSError *)error{
-    NSLog(@"发送数据 Error");
-}
-
-- (void)dealloc {
-    [udpSocket close];
-    udpSocket = nil;
-}
 
 @end
