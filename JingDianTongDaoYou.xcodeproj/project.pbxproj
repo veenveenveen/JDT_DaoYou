@@ -13,7 +13,6 @@
 		903C90F01D3000DE000EAF08 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 903C90EE1D3000DE000EAF08 /* Main.storyboard */; };
 		903C90F21D3000DE000EAF08 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 903C90F11D3000DE000EAF08 /* Assets.xcassets */; };
 		903C90F51D3000DE000EAF08 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 903C90F31D3000DE000EAF08 /* LaunchScreen.storyboard */; };
-		905584181DCB03A4003A9BB9 /* HTVoiceCodec.m in Sources */ = {isa = PBXBuildFile; fileRef = 905584171DCB03A4003A9BB9 /* HTVoiceCodec.m */; };
 		909BD1D51DC7241E005F540D /* bitwise.c in Sources */ = {isa = PBXBuildFile; fileRef = 909BD1641DC7241E005F540D /* bitwise.c */; };
 		909BD1D61DC7241E005F540D /* framing.c in Sources */ = {isa = PBXBuildFile; fileRef = 909BD1651DC7241E005F540D /* framing.c */; };
 		909BD1D71DC7241E005F540D /* bits.c in Sources */ = {isa = PBXBuildFile; fileRef = 909BD16C1DC7241E005F540D /* bits.c */; };
@@ -60,6 +59,7 @@
 		909BD2071DC7241F005F540D /* window.c in Sources */ = {isa = PBXBuildFile; fileRef = 909BD1D41DC7241E005F540D /* window.c */; };
 		909BD20D1DC8434C005F540D /* HTRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 909BD20B1DC8434C005F540D /* HTRecorder.m */; };
 		909BD22B1DC84537005F540D /* SpeexCodec.m in Sources */ = {isa = PBXBuildFile; fileRef = 909BD22A1DC84537005F540D /* SpeexCodec.m */; };
+		909FF83C1DCC2AA7004C1F2C /* HTSpeexCodec.m in Sources */ = {isa = PBXBuildFile; fileRef = 909FF83B1DCC2AA7004C1F2C /* HTSpeexCodec.m */; };
 		90AC64581D30AEB40020CB76 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90AC64571D30AEB40020CB76 /* AudioToolbox.framework */; };
 		95776D72243672A0BCEBDE56 /* libPods-JingDianTongDaoYou.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CDEDCD07CBE56B5AB049EFCE /* libPods-JingDianTongDaoYou.a */; };
 /* End PBXBuildFile section */
@@ -77,8 +77,6 @@
 		903C90F11D3000DE000EAF08 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		903C90F41D3000DE000EAF08 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		903C90F61D3000DE000EAF08 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		905584161DCB03A4003A9BB9 /* HTVoiceCodec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTVoiceCodec.h; sourceTree = "<group>"; };
-		905584171DCB03A4003A9BB9 /* HTVoiceCodec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTVoiceCodec.m; sourceTree = "<group>"; };
 		909BD1601DC72411005F540D /* OggSpeex-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OggSpeex-Prefix.pch"; sourceTree = "<group>"; };
 		909BD1621DC7241E005F540D /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
 		909BD1641DC7241E005F540D /* bitwise.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bitwise.c; sourceTree = "<group>"; };
@@ -189,6 +187,8 @@
 		909BD2251DC844C5005F540D /* SpeexAllHeaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpeexAllHeaders.h; sourceTree = "<group>"; };
 		909BD2291DC84537005F540D /* SpeexCodec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpeexCodec.h; sourceTree = "<group>"; };
 		909BD22A1DC84537005F540D /* SpeexCodec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpeexCodec.m; sourceTree = "<group>"; };
+		909FF83A1DCC2AA7004C1F2C /* HTSpeexCodec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTSpeexCodec.h; sourceTree = "<group>"; };
+		909FF83B1DCC2AA7004C1F2C /* HTSpeexCodec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTSpeexCodec.m; sourceTree = "<group>"; };
 		90AC64571D30AEB40020CB76 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		CDEDCD07CBE56B5AB049EFCE /* libPods-JingDianTongDaoYou.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-JingDianTongDaoYou.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -241,8 +241,7 @@
 				903C90E91D3000DE000EAF08 /* AppDelegate.m */,
 				903C90EB1D3000DE000EAF08 /* ViewController.h */,
 				903C90EC1D3000DE000EAF08 /* ViewController.m */,
-				903C90EE1D3000DE000EAF08 /* Main.storyboard */,
-				903C90F31D3000DE000EAF08 /* LaunchScreen.storyboard */,
+				909FF8361DCC22AA004C1F2C /* View */,
 				909BD2321DC87DD4005F540D /* Resourses */,
 				903C90E51D3000DE000EAF08 /* Supporting Files */,
 			);
@@ -270,10 +269,10 @@
 			isa = PBXGroup;
 			children = (
 				909BD2251DC844C5005F540D /* SpeexAllHeaders.h */,
+				909FF83A1DCC2AA7004C1F2C /* HTSpeexCodec.h */,
+				909FF83B1DCC2AA7004C1F2C /* HTSpeexCodec.m */,
 				909BD2291DC84537005F540D /* SpeexCodec.h */,
 				909BD22A1DC84537005F540D /* SpeexCodec.m */,
-				905584161DCB03A4003A9BB9 /* HTVoiceCodec.h */,
-				905584171DCB03A4003A9BB9 /* HTVoiceCodec.m */,
 			);
 			path = Codec;
 			sourceTree = "<group>";
@@ -428,6 +427,15 @@
 				903C90F11D3000DE000EAF08 /* Assets.xcassets */,
 			);
 			name = Resourses;
+			sourceTree = "<group>";
+		};
+		909FF8361DCC22AA004C1F2C /* View */ = {
+			isa = PBXGroup;
+			children = (
+				903C90EE1D3000DE000EAF08 /* Main.storyboard */,
+				903C90F31D3000DE000EAF08 /* LaunchScreen.storyboard */,
+			);
+			name = View;
 			sourceTree = "<group>";
 		};
 		90AC64501D30ABF10020CB76 /* Class */ = {
@@ -602,7 +610,6 @@
 				909BD1FE1DC7241F005F540D /* stereo.c in Sources */,
 				909BD1EF1DC7241F005F540D /* ltp.c in Sources */,
 				909BD1F01DC7241F005F540D /* mdf.c in Sources */,
-				905584181DCB03A4003A9BB9 /* HTVoiceCodec.m in Sources */,
 				909BD1E31DC7241E005F540D /* filters.c in Sources */,
 				903C90EA1D3000DE000EAF08 /* AppDelegate.m in Sources */,
 				909BD1DB1DC7241E005F540D /* exc_10_16_table.c in Sources */,
@@ -611,6 +618,7 @@
 				909BD1FB1DC7241F005F540D /* speex.c in Sources */,
 				909BD1D81DC7241E005F540D /* buffer.c in Sources */,
 				909BD1EC1DC7241F005F540D /* lpc.c in Sources */,
+				909FF83C1DCC2AA7004C1F2C /* HTSpeexCodec.m in Sources */,
 				909BD2071DC7241F005F540D /* window.c in Sources */,
 				909BD1E11DC7241E005F540D /* fftwrap.c in Sources */,
 				909BD1E81DC7241F005F540D /* high_lsp_tables.c in Sources */,

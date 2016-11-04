@@ -9,7 +9,7 @@
 #import "HTRecorder.h"
 #import "GCDAsyncUdpSocket.h"
 #import "SpeexCodec.h"
-#import "HTVoiceCodec.h"
+#import "HTSpeexCodec.h"
 
 #define kDefaultIP @"234.5.6.1"
 //#define kDefaultIP @"255.255.255.255"
@@ -28,7 +28,6 @@
     NSMutableData *speexData;//保存编码后的数据
     OSStatus errorStatus;
     
-    HTVoiceCodec *voiceCodec;
     SpeexCodec *codec;
     
     char encoded[FRAME_SIZE * 2];
@@ -42,6 +41,9 @@
 @property dispatch_queue_t m_queue;
 
 @property (nonatomic, strong) GCDAsyncUdpSocket *udpSocket;
+
+@property (nonatomic, strong) HTSpeexCodec *spxCodec;
+
 //@property (nonatomic, strong) NSData *pcmData;
 
 - (NSMutableArray *)getPCMDatas;
@@ -66,9 +68,11 @@
         self.isRecording = NO;
         
         codec = [[SpeexCodec alloc] init];
-        voiceCodec = [[HTVoiceCodec alloc] init];
         pcmDatas = [[NSMutableArray alloc] init];
         tempData = [[NSMutableData alloc] init];
+        
+        _spxCodec = [[HTSpeexCodec alloc] init];
+        
     }
     return self;
 }
@@ -123,12 +127,15 @@
                 return 0;
             }
         }
-        if (format->mFramesPerPacket > 0)
+        if (format->mFramesPerPacket > 0) {
             packets = frames / format->mFramesPerPacket;
-        else
-            packets = frames;	// worst-case scenario: 1 frame in a packet
-        if (packets == 0)		// sanity check
+        }
+        else {
+            packets = frames;
+        }// worst-case scenario: 1 frame in a packet
+        if (packets == 0) {		// sanity check
             packets = 1;
+        }
         bytes = packets * maxPacketSize;
     }
     return bytes;
@@ -157,31 +164,37 @@ void inputBufferHandler(void                               *inUserData,
                         unsigned long                      inNumPackets,
                         const AudioStreamPacketDescription *inPacketDesc)
 {
-    NSLog(@"在录音回调函数中。。。");
-    HTRecorder *recorder = (__bridge HTRecorder *) inUserData;
     
-    if (inNumPackets > 0) {
+    @autoreleasepool {
+    
+        HTRecorder *recorder = (__bridge HTRecorder *) inUserData;
         
-        dispatch_async(recorder.m_queue, ^{
+        if (inNumPackets > 0) {
             
-            NSData *bufferData = [NSData dataWithBytes:inBuffer->mAudioData length:inBuffer->mAudioDataByteSize];
+//            dispatch_async(recorder.m_queue, ^{
             
-            // recorder->mRecordPacket += inNumPackets;
-            NSLog(@"input buffer: %u", (unsigned int)inBuffer->mAudioDataByteSize);
+                NSLog(@"在录音回调函数中。。。");
             
-            // encode data
-            NSData *speexData = [recorder encodeDataToSpeexDataFromData: bufferData];
-            
-            NSLog(@"speexData length : %lu",speexData.length);
-            
-            [recorder.udpSocket sendData:speexData toHost:kDefaultIP port:kDefaultPort withTimeout:-1 tag:0];
-        });
-    }
-
-    OSStatus errorStatus = AudioQueueEnqueueBuffer(inAQ, inBuffer, 0, NULL);
-    if (errorStatus) {
-        NSLog(@"MyInputBufferHandler error:%d", (int)errorStatus);
-        return;
+                NSData *pcmData = [NSData dataWithBytes:inBuffer->mAudioData length:inBuffer->mAudioDataByteSize];
+                
+                // recorder->mRecordPacket += inNumPackets;
+                NSLog(@"input buffer: %u", (unsigned int)inBuffer->mAudioDataByteSize);
+                
+                // encode data
+                NSData *speexData = [recorder.spxCodec encodeToSpeexDataFromData:pcmData];
+//                NSData *speexData = [recorder encodeDataToSpeexDataFromData: pcmData];
+                
+                NSLog(@"speexData length : %lu",speexData.length);
+                
+                [recorder.udpSocket sendData:speexData toHost:kDefaultIP port:kDefaultPort withTimeout:-1 tag:0];
+//            });
+        }
+        
+        OSStatus errorStatus = AudioQueueEnqueueBuffer(inAQ, inBuffer, 0, NULL);
+        if (errorStatus) {
+            NSLog(@"MyInputBufferHandler error:%d", (int)errorStatus);
+            return;
+        }
     }
 }
 
