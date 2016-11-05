@@ -113,7 +113,7 @@
     }
     return encodedData;
 }
-//decode function//decode function
+//decode function
 - (NSData *)decodeToPcmDataFromData: (NSData *)speexData {
     if (!is_dec_init) {
         [self speexDecodeInit];
