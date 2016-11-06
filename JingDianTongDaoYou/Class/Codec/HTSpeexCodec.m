@@ -9,145 +9,135 @@
 #import "HTSpeexCodec.h"
 
 @implementation HTSpeexCodec {
-    
-    NSMutableData  *tempData;  //用于输入的data切割剩余
-    
     int enc_frame_size;//压缩时的帧大小
     int dec_frame_size;//解压时的帧大小
     
     void *enc_state;
     SpeexBits ebits;
-    BOOL is_enc_init;
     
     void *dec_state;
     SpeexBits dbits;
-    BOOL is_dec_init;
 }
-/*
- *初始化方法
- */
+
+#pragma mark - life circle
+
 - (instancetype)init {
     self = [super init];
     if (self) {
-        is_enc_init = NO;
-        is_dec_init = NO;
-        tempData = [NSMutableData data];
+        [self speexEncodeInit];
+        [self speexDecodeInit];
     }
     return self;
 }
-//初始化压缩器
+
+-(void)dealloc {
+    [self speexEncodeDestroy];
+    [self speexDecodeDestroy];
+}
+
+#pragma mark - 编码器和解码器 初始化 和 销毁 方法
+
+//初始化编码器
 - (void)speexEncodeInit{
-    int quality = 4;//设置压缩质量
-    speex_bits_init(&ebits);
+    int quality = 4;
+    
     enc_state = speex_encoder_init(&speex_nb_mode);
+    
     speex_encoder_ctl(enc_state, SPEEX_SET_QUALITY, &quality);
     speex_encoder_ctl(enc_state, SPEEX_GET_FRAME_SIZE, &enc_frame_size);
-    is_enc_init = YES;
+    
+    speex_bits_init(&ebits);
 }
-//销毁压缩器
+//销毁编码器
 - (void)speexEncodeDestroy{
-    speex_bits_destroy(&ebits);
     speex_encoder_destroy(enc_state);
-    is_enc_init = NO;
+    speex_bits_destroy(&ebits);
 }
-//初始化解压器
+//初始化解码器
 - (void)speexDecodeInit{
-    //int enh = 1;
-    speex_bits_init(&dbits);
+    int enh = 1;
+    
     dec_state = speex_decoder_init(&speex_nb_mode);
+    
     speex_decoder_ctl(dec_state, SPEEX_GET_FRAME_SIZE, &dec_frame_size);
-    //where enh is an int with value 0 to have the enhancer disabled and 1 to have it enabled. As of 1.2-beta1, the default is now to enable the enhancer.
-    //speex_decoder_ctl(dec_state, SPEEX_SET_QUALITY, &enh);
-    is_dec_init = YES;
+    speex_decoder_ctl(dec_state, SPEEX_SET_ENH, &enh);
+    
+    speex_bits_init(&dbits);
 }
-//销毁解压器
+//销毁解码器
 - (void)speexDecodeDestroy{
-    speex_bits_destroy(&dbits);
     speex_decoder_destroy(dec_state);
-    is_dec_init = NO;
+    speex_bits_destroy(&dbits);
 }
-//encode function
+
+
+#pragma mark - api methods
+
+//编码
 - (NSData *)encodeToSpeexDataFromData:(NSData *)pcmData {
-    if (!is_enc_init) {
-        [self speexEncodeInit];
-    }
-    
-    [tempData appendData:pcmData];
-    //用于保存编码后的数据
-    NSMutableData *encodedData = [NSMutableData data];
-    
-    short *pcmSrc = (short *)[pcmData bytes];
+    NSMutableData *encodedData = [NSMutableData data];//用于保存编码后的数据
     
     short input_frame[enc_frame_size];
-    float input[enc_frame_size];
     char cbits[200];
     int nbBytes;
+    NSUInteger packetSize = enc_frame_size * sizeof(short);
     
-    int packetSize = enc_frame_size * sizeof(short);
-    int nSamples = (int)ceil((int)tempData.length / packetSize);
+    NSData *data = nil;
     
-    for (int sampleIndex = 0; sampleIndex < nSamples; sampleIndex++) {
-        //清空这个结构体里所有的字节,以便编码一个新的帧
-        speex_bits_reset(&ebits);
-        //将数据拷贝到 input_frame 数组中
-        memcpy(input_frame, pcmSrc + (sampleIndex * enc_frame_size * sizeof(short)), enc_frame_size * sizeof(short));
-        //把16bits的值转化为float,以便speex库可以在上面工作
-        for (int i = 0; i < enc_frame_size; i++) {
-            input[i] = input_frame[i];
+    for (NSUInteger i=0; i<pcmData.length; i=i+packetSize) {
+        NSUInteger remain = pcmData.length - i;
+        
+        if (remain < packetSize) {
+            data = [pcmData subdataWithRange:NSMakeRange(i, remain)];
+        } else {
+            data = [pcmData subdataWithRange:NSMakeRange(i, packetSize)];
         }
-        speex_encode(enc_state, input, &ebits);
-        //对帧进行编码
-        //speex_encode_int(enc_state, input_frame, &ebits);
-         //把bits拷贝到一个的char型数组中
-        nbBytes = speex_bits_write(&ebits, cbits, enc_frame_size);
-        //获取还未编码的数据
-        Byte *dataPtr = (Byte *)[tempData bytes];
-        dataPtr += packetSize;
-        tempData = [NSMutableData dataWithBytesNoCopy:dataPtr length:tempData.length - packetSize freeWhenDone:NO];
+        
+        memcpy(input_frame, data.bytes, packetSize);
+        
+        //encode data
+        
+        speex_bits_reset(&ebits);
+        
+        speex_encode_int(enc_state, input_frame, &ebits);
+        
+        nbBytes = speex_bits_write(&ebits, cbits, 200);
         
         [encodedData appendBytes:cbits length:nbBytes];
     }
-    //销毁编码器
-    if (is_enc_init) {
-        [self speexEncodeDestroy];
-    }
+    
     return encodedData;
 }
-//decode function
+
+//解码
 - (NSData *)decodeToPcmDataFromData: (NSData *)speexData {
-    if (!is_dec_init) {
-        [self speexDecodeInit];
-    }
-    
-    char *encoded = (char *)speexData.bytes;
-    int size = (int)speexData.length;
-    
-    short output_frame[dec_frame_size];
-    //float output[dec_frame_size];
-    
     NSMutableData *decodedData = [NSMutableData data];
     
-    int nSamples = (int)ceil(size / 20);
+    short output_frame[dec_frame_size];
     
-    for (int sampleIndex = 0; sampleIndex < nSamples; sampleIndex++) {
+    NSUInteger perSize = 20 * sizeof(char);
+    
+    NSData *data = nil;
+    
+    for (NSUInteger i=0; i<speexData.length; i=i+perSize) {
+        NSUInteger remain = speexData.length - i;
         
-        speex_bits_read_from(&dbits, encoded + sampleIndex * 20 * sizeof(char), 20 * sizeof(char));
+        if (remain < perSize) {
+            data = [speexData subdataWithRange:NSMakeRange(i, remain)];
+        } else {
+            data = [speexData subdataWithRange:NSMakeRange(i, perSize)];
+        }
         
-        //speex_decode(dec_state, &dbits, output);
+        //decode data
         
-        //for (int i = 0 ; i < dec_frame_size; i++) {
-        //    output_frame[i]=output[i];
-        //}
-        
+        speex_bits_read_from(&dbits, (char *)data.bytes, (int)perSize);
         speex_decode_int(dec_state, &dbits, output_frame);
         
         [decodedData appendBytes:output_frame length:sizeof(short) * dec_frame_size];
-        
     }
-    if (is_dec_init) {
-        [self speexDecodeDestroy];
-    }
+    
     return decodedData;
+    
 }
 
 @end

@@ -32,7 +32,7 @@
         
         spxCodec = [[HTSpeexCodec alloc] init];
         
-        _encode_send_queue = dispatch_queue_create("com.JDKDaoYou.encode", DISPATCH_QUEUE_SERIAL);
+        _encode_send_queue = dispatch_queue_create("com.JDKDaoYou.sendData", DISPATCH_QUEUE_SERIAL);
         udpSocket = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:_encode_send_queue];
         
         NSError *error = nil;
@@ -49,9 +49,41 @@
 
 - (void)dealloc {
     [udpSocket close];
+    
     spxCodec = nil;
     udpSocket = nil;
     _encode_send_queue = nil;
+}
+
+
+#pragma mark - input callback
+
+void inputCallback(void                               *inUserData,
+                   AudioQueueRef                      inAQ,
+                   AudioQueueBufferRef                inBuffer,
+                   const AudioTimeStamp               *inStartTime,
+                   unsigned long                      inNumPackets,
+                   const AudioStreamPacketDescription *inPacketDesc)
+{
+    HTRecorder *recorder = (__bridge HTRecorder *) inUserData;
+    
+    if (inNumPackets > 0) {
+        [recorder inputDataHandler:inBuffer->mAudioData length:inBuffer->mAudioDataByteSize];
+    }
+    
+    OSStatus errorStatus = AudioQueueEnqueueBuffer(inAQ, inBuffer, 0, NULL);
+    if (errorStatus) {
+        NSLog(@"MyInputBufferHandler error:%d", (int)errorStatus);
+        return;
+    }
+}
+
+- (void)inputDataHandler:(void *)bytes length:(UInt32)len {
+    NSData *input = [NSData dataWithBytes:bytes length:len];
+    
+    NSData *speexData = [spxCodec encodeToSpeexDataFromData:input];
+    
+    [udpSocket sendData:speexData toHost:kDefaultIP port:kDefaultPort withTimeout:-1 tag:0];
 }
 
 #pragma mark - setup AudioQueue
@@ -105,33 +137,6 @@
     }
 }
 
-#pragma mark - input callback
-
-void inputCallback(void                               *inUserData,
-                   AudioQueueRef                      inAQ,
-                   AudioQueueBufferRef                inBuffer,
-                   const AudioTimeStamp               *inStartTime,
-                   unsigned long                      inNumPackets,
-                   const AudioStreamPacketDescription *inPacketDesc)
-{
-    @autoreleasepool {
-        HTRecorder *recorder = (__bridge HTRecorder *) inUserData;
-        if (inNumPackets > 0) {
-            NSData *pcmData = [NSData dataWithBytes:inBuffer->mAudioData length:inBuffer->mAudioDataByteSize];
-            //encode data
-            NSData *speexData = [recorder->spxCodec encodeToSpeexDataFromData:pcmData];
-            NSLog(@"input buffer: %u , speexData length : %lu",(unsigned int)inBuffer->mAudioDataByteSize,speexData.length);
-            //send data
-            [recorder->udpSocket sendData:speexData toHost:kDefaultIP port:kDefaultPort withTimeout:-1 tag:0];
-        }
-        OSStatus errorStatus = AudioQueueEnqueueBuffer(inAQ, inBuffer, 0, NULL);
-        if (errorStatus) {
-            NSLog(@"MyInputBufferHandler error:%d", (int)errorStatus);
-            return;
-        }
-    }
-}
-
 #pragma mark - start and stop methods
 
 //开始录音
@@ -165,40 +170,5 @@ void inputCallback(void                               *inUserData,
 -(void)udpSocket:(GCDAsyncUdpSocket *)sock didNotSendDataWithTag:(long)tag dueToError:(NSError *)error{
     NSLog(@"发送数据 Error");
 }
-
-#pragma mark - other
-
-//- (int)computeRecordBufferSizeWith:(const AudioStreamBasicDescription *)format and: (float)seconds {
-//    int packets, frames, bytes = 0;
-//    frames = (int)ceil(seconds * format->mSampleRate);
-//
-//    if (format->mBytesPerFrame > 0)
-//        bytes = frames * format->mBytesPerFrame;
-//    else {
-//        UInt32 maxPacketSize;
-//        if (format->mBytesPerPacket > 0)
-//            maxPacketSize = format->mBytesPerPacket;	// constant packet size
-//        else {
-//            UInt32 propertySize = sizeof(maxPacketSize);
-//            errorStatus = AudioQueueGetProperty(inputQueue, kAudioQueueProperty_MaximumOutputPacketSize, &maxPacketSize,
-//                                                &propertySize);
-//            if (errorStatus) {
-//                NSLog(@"ComputeRecordBufferSize error:%d", (int)errorStatus);
-//                return 0;
-//            }
-//        }
-//        if (format->mFramesPerPacket > 0) {
-//            packets = frames / format->mFramesPerPacket;
-//        }
-//        else {
-//            packets = frames;
-//        }// worst-case scenario: 1 frame in a packet
-//        if (packets == 0) {		// sanity check
-//            packets = 1;
-//        }
-//        bytes = packets * maxPacketSize;
-//    }
-//    return bytes;
-//}
 
 @end

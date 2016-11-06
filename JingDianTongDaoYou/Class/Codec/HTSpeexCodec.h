@@ -12,14 +12,13 @@
 @interface HTSpeexCodec : NSObject
 /*
  * 编码
- * pcmData 语音数据
+ * pcmData 需要编码的语音数据
  * return 编码后的语音数据
  */
 - (NSData *)encodeToSpeexDataFromData:(NSData *)pcmData;
 /*
  * 解码
- * char encoded[] 编码后的语音数据
- * int size 编码后的语音数据的长度
+ * speexData 需要解码的语音数据
  * return 解码后的语音数据
  */
 - (NSData *)decodeToPcmDataFromData: (NSData *)speexData;
