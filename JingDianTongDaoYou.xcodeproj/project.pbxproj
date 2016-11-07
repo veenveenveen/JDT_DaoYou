@@ -13,6 +13,8 @@
 		903C90F01D3000DE000EAF08 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 903C90EE1D3000DE000EAF08 /* Main.storyboard */; };
 		903C90F21D3000DE000EAF08 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 903C90F11D3000DE000EAF08 /* Assets.xcassets */; };
 		903C90F51D3000DE000EAF08 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 903C90F31D3000DE000EAF08 /* LaunchScreen.storyboard */; };
+		904B5B481DD04AF500C01D8A /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 904B5B471DD04AF500C01D8A /* ViewController.xib */; };
+		904B5B4B1DD0616200C01D8A /* HTEchoCanceller.m in Sources */ = {isa = PBXBuildFile; fileRef = 904B5B4A1DD0616200C01D8A /* HTEchoCanceller.m */; };
 		909BD20D1DC8434C005F540D /* HTRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 909BD20B1DC8434C005F540D /* HTRecorder.m */; };
 		909FF9A41DCC4EDB004C1F2C /* HTSpeexCodec.m in Sources */ = {isa = PBXBuildFile; fileRef = 909FF9A01DCC4EDB004C1F2C /* HTSpeexCodec.m */; };
 		909FFA1A1DCC4F1B004C1F2C /* bitwise.c in Sources */ = {isa = PBXBuildFile; fileRef = 909FF9A91DCC4F1B004C1F2C /* bitwise.c */; };
@@ -76,6 +78,9 @@
 		903C90F11D3000DE000EAF08 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		903C90F41D3000DE000EAF08 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		903C90F61D3000DE000EAF08 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		904B5B471DD04AF500C01D8A /* ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ViewController.xib; sourceTree = "<group>"; };
+		904B5B491DD0616200C01D8A /* HTEchoCanceller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTEchoCanceller.h; sourceTree = "<group>"; };
+		904B5B4A1DD0616200C01D8A /* HTEchoCanceller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTEchoCanceller.m; sourceTree = "<group>"; };
 		909BD1601DC72411005F540D /* OggSpeex-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OggSpeex-Prefix.pch"; sourceTree = "<group>"; };
 		909BD20B1DC8434C005F540D /* HTRecorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTRecorder.m; sourceTree = "<group>"; };
 		909BD20C1DC8434C005F540D /* HTRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTRecorder.h; sourceTree = "<group>"; };
@@ -267,8 +272,9 @@
 		909FF8361DCC22AA004C1F2C /* View */ = {
 			isa = PBXGroup;
 			children = (
-				903C90EE1D3000DE000EAF08 /* Main.storyboard */,
+				904B5B471DD04AF500C01D8A /* ViewController.xib */,
 				903C90F31D3000DE000EAF08 /* LaunchScreen.storyboard */,
+				903C90EE1D3000DE000EAF08 /* Main.storyboard */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -430,6 +436,8 @@
 			isa = PBXGroup;
 			children = (
 				909FF99E1DCC4EDB004C1F2C /* Codec */,
+				904B5B491DD0616200C01D8A /* HTEchoCanceller.h */,
+				904B5B4A1DD0616200C01D8A /* HTEchoCanceller.m */,
 				909BD20C1DC8434C005F540D /* HTRecorder.h */,
 				909BD20B1DC8434C005F540D /* HTRecorder.m */,
 			);
@@ -506,6 +514,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				904B5B481DD04AF500C01D8A /* ViewController.xib in Resources */,
 				909FFA3F1DCC4F1C004C1F2C /* speex_config_types.h.in in Resources */,
 				903C90F51D3000DE000EAF08 /* LaunchScreen.storyboard in Resources */,
 				903C90F21D3000DE000EAF08 /* Assets.xcassets in Resources */,
@@ -594,6 +603,7 @@
 				909FFA2E1DCC4F1B004C1F2C /* jitter.c in Sources */,
 				909FFA1E1DCC4F1B004C1F2C /* cb_search.c in Sources */,
 				909FFA4B1DCC4F1C004C1F2C /* vq.c in Sources */,
+				904B5B4B1DD0616200C01D8A /* HTEchoCanceller.m in Sources */,
 				909FFA371DCC4F1C004C1F2C /* modes_wb.c in Sources */,
 				909BD20D1DC8434C005F540D /* HTRecorder.m in Sources */,
 				909FFA2B1DCC4F1B004C1F2C /* hexc_10_32_table.c in Sources */,

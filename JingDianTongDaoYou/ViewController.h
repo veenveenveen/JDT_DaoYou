@@ -13,5 +13,7 @@
 
 @property (nonatomic, strong) HTRecorder *recorder;
 
+- (IBAction)recordOrPause:(id)sender;
+
 @end
 

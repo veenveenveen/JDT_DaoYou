@@ -8,6 +8,7 @@
 
 #import "HTRecorder.h"
 #import "HTSpeexCodec.h"
+#import "HTEchoCanceller.h"
 
 @implementation HTRecorder {
     AudioStreamBasicDescription mDataFormat;//音频流描述对象  格式化音频数据
@@ -20,6 +21,9 @@
     
     GCDAsyncUdpSocket *udpSocket;
     HTSpeexCodec *spxCodec;
+    
+    HTEchoCanceller *echoCanceller;//回声消除器
+    NSMutableArray *sendArrs;
 }
 
 #pragma mark - life cycle
@@ -27,6 +31,9 @@
 - (instancetype) init{
     self = [super init];
     if (self){
+        
+        echoCanceller = [[HTEchoCanceller alloc] init];
+        sendArrs = [NSMutableArray array];
         
         self.isRecording = NO;
         
@@ -41,15 +48,12 @@
             NSLog(@"error: %@",error.description);
         }
         
-        [self setupAudioRecording];
-     
     }
     return self;
 }
 
 - (void)dealloc {
     [udpSocket close];
-    
     spxCodec = nil;
     udpSocket = nil;
     _encode_send_queue = nil;
@@ -68,7 +72,7 @@ void inputCallback(void                               *inUserData,
     HTRecorder *recorder = (__bridge HTRecorder *) inUserData;
     
     if (inNumPackets > 0) {
-        [recorder inputDataHandler:inBuffer->mAudioData length:inBuffer->mAudioDataByteSize];
+        [recorder inputDataHandler:inBuffer->mAudioData length:inBuffer->mAudioDataByteSize recorder:recorder];
     }
     
     OSStatus errorStatus = AudioQueueEnqueueBuffer(inAQ, inBuffer, 0, NULL);
@@ -78,9 +82,32 @@ void inputCallback(void                               *inUserData,
     }
 }
 
-- (void)inputDataHandler:(void *)bytes length:(UInt32)len {
+- (void)inputDataHandler:(void *)bytes length:(UInt32)len recorder: (HTRecorder *)recorder {
     NSData *input = [NSData dataWithBytes:bytes length:len];
     
+    
+//    if (input) {//回声消除
+//        [recorder->sendArrs addObject:input];
+//    }
+//    
+//    if (recorder->sendArrs.count == 2) {
+//        NSData *echoData1 = [recorder->sendArrs objectAtIndex:0];
+//        NSData *echoData2 = [recorder->sendArrs objectAtIndex:1];
+//        NSData *echoDataC = [recorder->echoCanceller doEchoCancellationWith:echoData2 and:echoData1];
+//        [recorder->sendArrs removeObjectAtIndex:0];
+//        
+//        NSData *speexData = [spxCodec encodeToSpeexDataFromData:echoDataC];
+//        
+//        [udpSocket sendData:speexData toHost:kDefaultIP port:kDefaultPort withTimeout:-1 tag:0];
+//        
+//        return;
+//    }
+//    
+//    if (recorder->sendArrs.count > 2) {
+//        [recorder->sendArrs removeAllObjects];
+//    }
+    
+
     NSData *speexData = [spxCodec encodeToSpeexDataFromData:input];
     
     [udpSocket sendData:speexData toHost:kDefaultIP port:kDefaultPort withTimeout:-1 tag:0];
@@ -113,13 +140,16 @@ void inputCallback(void                               *inUserData,
     }
     
     //创建并分配音频队列缓冲区
-    //    bufferByteSize = [self computeRecordBufferSizeWith:&mDataFormat and:kBufferDurationSeconds];
     for (int i = 0; i < kNumberBuffers; i++) {
-        //        AudioQueueAllocateBuffer(_aqc.queue, bufferByteSize, &inputBuffers[i]); // kDefaultInputBufferSize
         AudioQueueAllocateBuffer(inputQueue, kDefaultInputBufferSize, &inputBuffers[i]); // kDefaultInputBufferSize
         AudioQueueEnqueueBuffer(inputQueue, inputBuffers[i], 0, NULL);//将 _audioBuffers[i]添加到队列中
     }
     
+    //开启录制队列
+    errorStatus = AudioQueueStart(inputQueue, NULL);
+    if (errorStatus) {
+        NSLog(@"StartRecord error:%d", (int)errorStatus);
+    }
 }
 
 //设置录音格式
@@ -143,11 +173,8 @@ void inputCallback(void                               *inUserData,
 - (void)startRecording{
     if (!self.isRecording){
         self.isRecording = YES;
-        //开启录制队列
-        errorStatus = AudioQueueStart(inputQueue, NULL);
-        if (errorStatus) {
-            NSLog(@"StartRecord error:%d", (int)errorStatus);
-        }
+        
+        [self setupAudioRecording];
     }
 }
 //停止录音
@@ -155,7 +182,6 @@ void inputCallback(void                               *inUserData,
     if (self.isRecording){
         self.isRecording = NO;
         
-        [udpSocket close];
         //暂停录制队列
         AudioQueuePause(inputQueue);
     }

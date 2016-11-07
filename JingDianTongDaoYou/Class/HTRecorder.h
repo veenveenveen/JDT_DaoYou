@@ -15,7 +15,7 @@
 #define kNumberBuffers 2
 //采样率为8000
 #define kSamplingRate 8000
-#define kDefaultInputBufferSize 960//1200、960，1920，320
+#define kDefaultInputBufferSize 640//1200、960，1920，320,640
 //#define kBufferDurationSeconds 0.5
 #define FRAME_SIZE 160 // PCM音频8khz*20ms -> 8000*0.02=160
 //ip地址

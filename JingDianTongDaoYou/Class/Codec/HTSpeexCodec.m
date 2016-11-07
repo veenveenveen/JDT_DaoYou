@@ -75,6 +75,7 @@
 
 //编码
 - (NSData *)encodeToSpeexDataFromData:(NSData *)pcmData {
+    
     NSMutableData *encodedData = [NSMutableData data];//用于保存编码后的数据
     
     short input_frame[enc_frame_size];
@@ -92,9 +93,8 @@
         } else {
             data = [pcmData subdataWithRange:NSMakeRange(i, packetSize)];
         }
-        
         memcpy(input_frame, data.bytes, packetSize);
-        
+    
         //encode data
         
         speex_bits_reset(&ebits);
@@ -104,9 +104,11 @@
         nbBytes = speex_bits_write(&ebits, cbits, 200);
         
         [encodedData appendBytes:cbits length:nbBytes];
+        
     }
     
     return encodedData;
+
 }
 
 //解码

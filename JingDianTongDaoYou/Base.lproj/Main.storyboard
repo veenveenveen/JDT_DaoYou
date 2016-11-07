@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2555" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Item-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -19,9 +22,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fea-og-mCn" userLabel="TopView">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="547"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="IfP-gf-Kde"/>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4N6-GR-jdB">
+                                        <rect key="frame" x="150" y="219" width="75" height="109"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="109" id="CqZ-km-MZ3"/>
                                             <constraint firstAttribute="width" constant="75" id="sPF-gA-v2b"/>
@@ -32,10 +36,14 @@
                                         </connections>
                                     </button>
                                     <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="正在录音..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iGi-ut-Aqq">
+                                        <rect key="frame" x="146" y="348" width="83.5" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="IfP-gf-Kde">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="547"/>
+                                    </imageView>
                                 </subviews>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
@@ -50,6 +58,7 @@
                                 </constraints>
                             </view>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo_five" translatesAutoresizingMaskIntoConstraints="NO" id="lT2-rm-I3q">
+                                <rect key="frame" x="0.0" y="547" width="375" height="120"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="120" id="Kyt-MB-1Sf"/>
                                 </constraints>
@@ -59,11 +68,11 @@
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="Fea-og-mCn" secondAttribute="trailing" id="58N-TQ-WtH"/>
                             <constraint firstAttribute="trailing" secondItem="lT2-rm-I3q" secondAttribute="trailing" id="73G-EC-QUk"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="lT2-rm-I3q" secondAttribute="bottom" id="RUc-4x-YiF"/>
                             <constraint firstItem="lT2-rm-I3q" firstAttribute="top" secondItem="Fea-og-mCn" secondAttribute="bottom" id="jAV-Z3-7Uv"/>
                             <constraint firstItem="lT2-rm-I3q" firstAttribute="leading" secondItem="yLd-G7-JNk" secondAttribute="leading" id="lIG-MN-mDt"/>
                             <constraint firstItem="Fea-og-mCn" firstAttribute="top" secondItem="yLd-G7-JNk" secondAttribute="top" id="v9s-PL-dW5"/>
                             <constraint firstItem="Fea-og-mCn" firstAttribute="leading" secondItem="yLd-G7-JNk" secondAttribute="leading" id="xXa-oi-0iH"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="lT2-rm-I3q" secondAttribute="bottom" id="yVl-BD-8LD"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Item" id="i1e-HL-hs4"/>
