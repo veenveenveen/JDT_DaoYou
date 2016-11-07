@@ -24,6 +24,10 @@
     
     HTEchoCanceller *echoCanceller;//回声消除器
     NSMutableArray *sendArrs;
+    
+    NSMutableData *tempData;
+    NSMutableArray *pcmArrs;
+    
 }
 
 #pragma mark - life cycle
@@ -31,6 +35,9 @@
 - (instancetype) init{
     self = [super init];
     if (self){
+        
+        pcmArrs = [NSMutableArray array];
+        tempData = [NSMutableData data];
         
         echoCanceller = [[HTEchoCanceller alloc] init];
         sendArrs = [NSMutableArray array];
@@ -59,6 +66,39 @@
     _encode_send_queue = nil;
 }
 
+#pragma mark - 分割数据 编码数据
+//编码数据
+- (NSData *)encodeToSpeexData:(NSData *)pcmData {
+    NSMutableData *speexData = [NSMutableData data];
+    [self cutDataFromData:pcmData];
+    while ([[self getPCMArrs] count] > 0) {
+        NSData *pcmData = [[self getPCMArrs] objectAtIndex:0];
+        NSData *spxData = [spxCodec encodeToSpeexDataFromData:pcmData];
+        [speexData appendData:spxData];
+        [[self getPCMArrs] removeObjectAtIndex:0];
+    }
+    return speexData;
+}
+//分割数据
+- (void)cutDataFromData:(NSData *)data {
+    int packetSize = FRAME_SIZE * 2;
+    @synchronized (pcmArrs) {
+        [tempData appendData:data];
+        while (tempData.length >= packetSize) {
+            NSData *pData = [NSData dataWithBytes:tempData.bytes length:packetSize];
+            [pcmArrs addObject:pData];
+            Byte *dataPtr = (Byte *)[tempData bytes];
+            dataPtr += packetSize;
+            tempData = [NSMutableData dataWithBytesNoCopy:dataPtr length:tempData.length - packetSize freeWhenDone:NO];
+        }
+    }
+}
+
+- (NSMutableArray *)getPCMArrs {
+    @synchronized(pcmArrs) {
+        return pcmArrs;
+    }
+}
 
 #pragma mark - input callback
 
@@ -69,16 +109,18 @@ void inputCallback(void                               *inUserData,
                    unsigned long                      inNumPackets,
                    const AudioStreamPacketDescription *inPacketDesc)
 {
-    HTRecorder *recorder = (__bridge HTRecorder *) inUserData;
-    
-    if (inNumPackets > 0) {
-        [recorder inputDataHandler:inBuffer->mAudioData length:inBuffer->mAudioDataByteSize recorder:recorder];
-    }
-    
-    OSStatus errorStatus = AudioQueueEnqueueBuffer(inAQ, inBuffer, 0, NULL);
-    if (errorStatus) {
-        NSLog(@"MyInputBufferHandler error:%d", (int)errorStatus);
-        return;
+    @autoreleasepool {
+        HTRecorder *recorder = (__bridge HTRecorder *) inUserData;
+        
+        if (inNumPackets > 0) {
+            [recorder inputDataHandler:inBuffer->mAudioData length:inBuffer->mAudioDataByteSize recorder:recorder];
+        }
+        
+        OSStatus errorStatus = AudioQueueEnqueueBuffer(inAQ, inBuffer, 0, NULL);
+        if (errorStatus) {
+            NSLog(@"MyInputBufferHandler error:%d", (int)errorStatus);
+            return;
+        }
     }
 }
 
@@ -108,7 +150,11 @@ void inputCallback(void                               *inUserData,
 //    }
     
 
-    NSData *speexData = [spxCodec encodeToSpeexDataFromData:input];
+//    NSData *speexData = [spxCodec encodeToSpeexDataFromData:input];
+    
+    NSData *speexData = [self encodeToSpeexData:input];
+    
+    NSLog(@"input buffer = %lu , udp socket send data len = %lu", input.length,speexData.length);
     
     [udpSocket sendData:speexData toHost:kDefaultIP port:kDefaultPort withTimeout:-1 tag:0];
 }
@@ -159,11 +205,11 @@ void inputCallback(void                               *inUserData,
     mDataFormat.mFormatID = inFormatID;// PCM 格式 kAudioFormatLinearPCM
     mDataFormat.mChannelsPerFrame = 1;//设置通道数 1:单声道；2:立体声
     mDataFormat.mBytesPerFrame = 2;//每个通道里，一帧采集的bit数目
-    mDataFormat.mBitsPerChannel = 16;// 语音每采样点占用位数/
-    mDataFormat.mBytesPerPacket = 2;//mBitsPerChannel / 8 * mChannelsPerFrame
-    mDataFormat.mFramesPerPacket = 1;  //每一个packet一帧数据
     if (inFormatID == kAudioFormatLinearPCM) {
         mDataFormat.mFormatFlags = kLinearPCMFormatFlagIsSignedInteger | kLinearPCMFormatFlagIsPacked;
+        mDataFormat.mBitsPerChannel = 16;// 语音每采样点占用位数/
+        mDataFormat.mBytesPerPacket = 2;//mBitsPerChannel / 8 * mChannelsPerFrame
+        mDataFormat.mFramesPerPacket = 1;  //每一个packet一帧数据
     }
 }
 
@@ -181,7 +227,6 @@ void inputCallback(void                               *inUserData,
 -(void)stopRecording{
     if (self.isRecording){
         self.isRecording = NO;
-        
         //暂停录制队列
         AudioQueuePause(inputQueue);
     }

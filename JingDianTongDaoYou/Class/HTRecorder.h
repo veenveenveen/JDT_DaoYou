@@ -12,11 +12,10 @@
 #import "GCDAsyncUdpSocket.h"
 
 //定义的三个缓冲区
-#define kNumberBuffers 2
+#define kNumberBuffers 3
 //采样率为8000
 #define kSamplingRate 8000
 #define kDefaultInputBufferSize 640//1200、960，1920，320,640
-//#define kBufferDurationSeconds 0.5
 #define FRAME_SIZE 160 // PCM音频8khz*20ms -> 8000*0.02=160
 //ip地址
 #define kDefaultIP @"234.5.6.1"
