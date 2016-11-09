@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import <AudioToolbox/AudioToolbox.h>
-#import <AudioToolbox/AudioFile.h>
 #import "GCDAsyncUdpSocket.h"
 
 //定义的三个缓冲区

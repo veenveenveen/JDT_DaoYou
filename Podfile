@@ -7,4 +7,7 @@ target 'JingDianTongDaoYou' do
 
   # Pods for JingDianTongDaoYou
 pod 'CocoaAsyncSocket', :git => 'https://github.com/robbiehanson/CocoaAsyncSocket.git'
+
+#pod 'KVNProgress',:git=>'https://github.com/AssistoLab/KVNProgress.git'
+
 end

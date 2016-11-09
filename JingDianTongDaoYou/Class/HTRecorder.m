@@ -10,6 +10,9 @@
 #import "HTSpeexCodec.h"
 #import "HTEchoCanceller.h"
 
+@interface HTRecorder ()
+@end
+
 @implementation HTRecorder {
     AudioStreamBasicDescription mDataFormat;//音频流描述对象  格式化音频数据
     AudioQueueRef               inputQueue;//音频队列
@@ -27,6 +30,7 @@
     
     NSMutableData *tempData;
     NSMutableArray *pcmArrs;
+    int j;
     
 }
 
@@ -35,6 +39,8 @@
 - (instancetype) init{
     self = [super init];
     if (self){
+        
+        j = 0;
         
         pcmArrs = [NSMutableArray array];
         tempData = [NSMutableData data];
@@ -55,6 +61,8 @@
             NSLog(@"error: %@",error.description);
         }
         
+        [self setupAudioRecording];
+        
     }
     return self;
 }
@@ -67,6 +75,7 @@
 }
 
 #pragma mark - 分割数据 编码数据
+
 //编码数据
 - (NSData *)encodeToSpeexData:(NSData *)pcmData {
     NSMutableData *speexData = [NSMutableData data];
@@ -110,6 +119,7 @@ void inputCallback(void                               *inUserData,
                    const AudioStreamPacketDescription *inPacketDesc)
 {
     @autoreleasepool {
+        
         HTRecorder *recorder = (__bridge HTRecorder *) inUserData;
         
         if (inNumPackets > 0) {
@@ -148,15 +158,22 @@ void inputCallback(void                               *inUserData,
 //    if (recorder->sendArrs.count > 2) {
 //        [recorder->sendArrs removeAllObjects];
 //    }
-    
 
 //    NSData *speexData = [spxCodec encodeToSpeexDataFromData:input];
+    
     
     NSData *speexData = [self encodeToSpeexData:input];
     
     NSLog(@"input buffer = %lu , udp socket send data len = %lu", input.length,speexData.length);
     
     [udpSocket sendData:speexData toHost:kDefaultIP port:kDefaultPort withTimeout:-1 tag:0];
+    
+    
+    //test
+//    j++;
+//    NSData *da = [NSData dataWithBytes:&j length:sizeof(int)];
+//    NSLog(@"----------%d",j);
+//    [udpSocket sendData:da toHost:kDefaultIP port:kDefaultPort withTimeout:-1 tag:0];
 }
 
 #pragma mark - setup AudioQueue
@@ -191,11 +208,9 @@ void inputCallback(void                               *inUserData,
         AudioQueueEnqueueBuffer(inputQueue, inputBuffers[i], 0, NULL);//将 _audioBuffers[i]添加到队列中
     }
     
-    //开启录制队列
-    errorStatus = AudioQueueStart(inputQueue, NULL);
-    if (errorStatus) {
-        NSLog(@"StartRecord error:%d", (int)errorStatus);
-    }
+    AudioQueueStart(inputQueue, NULL);
+    
+    AudioQueuePause(inputQueue);
 }
 
 //设置录音格式
@@ -215,31 +230,37 @@ void inputCallback(void                               *inUserData,
 
 #pragma mark - start and stop methods
 
-//开始录音
+//start recording
 - (void)startRecording{
     if (!self.isRecording){
         self.isRecording = YES;
-        
-        [self setupAudioRecording];
+        //start record queue
+        errorStatus = AudioQueueStart(inputQueue, NULL);
+        if (errorStatus) {
+            NSLog(@"Start Record Queue error:%d", (int)errorStatus);
+        }
     }
 }
-//停止录音
+//stop recording
 -(void)stopRecording{
     if (self.isRecording){
         self.isRecording = NO;
-        //暂停录制队列
-        AudioQueuePause(inputQueue);
+        //pause record queue
+        errorStatus = AudioQueuePause(inputQueue);
+        if (errorStatus) {
+            NSLog(@"Pause Record Queue error:%d", (int)errorStatus);
+        }
     }
 }
 
 #pragma mark - Socket delegate method
 
 - (void)udpSocket:(GCDAsyncUdpSocket *)sock didSendDataWithTag:(long)tag{
-    //NSLog(@"发送数据");
+    //NSLog(@"send data success");
 }
 
 -(void)udpSocket:(GCDAsyncUdpSocket *)sock didNotSendDataWithTag:(long)tag dueToError:(NSError *)error{
-    NSLog(@"发送数据 Error");
+    NSLog(@"send data Error");
 }
 
 @end
