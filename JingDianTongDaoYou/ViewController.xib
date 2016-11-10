@@ -22,22 +22,26 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jqf-Bo-rh8" userLabel="TopView">
-                    <rect key="frame" x="0.0" y="0.0" width="375" height="547"/>
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="567"/>
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="r93-X0-4qP">
-                            <rect key="frame" x="0.0" y="0.0" width="375" height="547"/>
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="567"/>
                         </imageView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wnn-F5-qpF">
-                            <rect key="frame" x="150" y="199" width="75" height="109"/>
-                            <state key="normal" image="record_false"/>
+                            <rect key="frame" x="136.5" y="177" width="102" height="174"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="101.67" id="N2l-XZ-AY7"/>
+                                <constraint firstAttribute="height" constant="174" id="t8h-fH-cyE"/>
+                            </constraints>
+                            <state key="normal" image="mic0"/>
                             <connections>
                                 <action selector="recordOrPause:" destination="-1" eventType="touchUpInside" id="cNZ-0T-Ea6"/>
                             </connections>
                         </button>
                         <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="正在录音..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FuJ-zC-6Yc">
-                            <rect key="frame" x="146" y="328" width="84" height="21"/>
+                            <rect key="frame" x="146.5" y="371" width="83.5" height="20.5"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <color key="textColor" red="0.87151015229999995" green="0.28237963700000002" blue="0.2412013029" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
@@ -53,10 +57,10 @@
                         <constraint firstAttribute="bottom" secondItem="r93-X0-4qP" secondAttribute="bottom" id="srA-3u-jQ5"/>
                     </constraints>
                 </view>
-                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo_five" translatesAutoresizingMaskIntoConstraints="NO" id="tPd-nP-o9V">
-                    <rect key="frame" x="0.0" y="547" width="375" height="120"/>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="advpic" translatesAutoresizingMaskIntoConstraints="NO" id="tPd-nP-o9V">
+                    <rect key="frame" x="0.0" y="567" width="375" height="100"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="120" id="eI3-42-PHd"/>
+                        <constraint firstAttribute="height" constant="100" id="eI3-42-PHd"/>
                     </constraints>
                 </imageView>
             </subviews>
@@ -74,8 +78,8 @@
         </view>
     </objects>
     <resources>
+        <image name="advpic" width="414" height="100"/>
         <image name="background" width="375" height="667"/>
-        <image name="logo_five" width="801" height="157"/>
-        <image name="record_false" width="75" height="109"/>
+        <image name="mic0" width="305" height="522"/>
     </resources>
 </document>

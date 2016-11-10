@@ -8,7 +8,6 @@
 
 #import "HTRecorder.h"
 #import "HTSpeexCodec.h"
-#import "HTEchoCanceller.h"
 
 @interface HTRecorder ()
 @end
@@ -25,11 +24,9 @@
     GCDAsyncUdpSocket *udpSocket;
     HTSpeexCodec *spxCodec;
     
-    HTEchoCanceller *echoCanceller;//回声消除器
-    NSMutableArray *sendArrs;
-    
     NSMutableData *tempData;
     NSMutableArray *pcmArrs;
+    
     int j;
     
 }
@@ -44,9 +41,6 @@
         
         pcmArrs = [NSMutableArray array];
         tempData = [NSMutableData data];
-        
-        echoCanceller = [[HTEchoCanceller alloc] init];
-        sendArrs = [NSMutableArray array];
         
         self.isRecording = NO;
         
@@ -137,43 +131,17 @@ void inputCallback(void                               *inUserData,
 - (void)inputDataHandler:(void *)bytes length:(UInt32)len recorder: (HTRecorder *)recorder {
     NSData *input = [NSData dataWithBytes:bytes length:len];
     
-    
-//    if (input) {//回声消除
-//        [recorder->sendArrs addObject:input];
-//    }
-//    
-//    if (recorder->sendArrs.count == 2) {
-//        NSData *echoData1 = [recorder->sendArrs objectAtIndex:0];
-//        NSData *echoData2 = [recorder->sendArrs objectAtIndex:1];
-//        NSData *echoDataC = [recorder->echoCanceller doEchoCancellationWith:echoData2 and:echoData1];
-//        [recorder->sendArrs removeObjectAtIndex:0];
-//        
-//        NSData *speexData = [spxCodec encodeToSpeexDataFromData:echoDataC];
-//        
-//        [udpSocket sendData:speexData toHost:kDefaultIP port:kDefaultPort withTimeout:-1 tag:0];
-//        
-//        return;
-//    }
-//    
-//    if (recorder->sendArrs.count > 2) {
-//        [recorder->sendArrs removeAllObjects];
-//    }
-
-//    NSData *speexData = [spxCodec encodeToSpeexDataFromData:input];
-    
-    
     NSData *speexData = [self encodeToSpeexData:input];
     
-    NSLog(@"input buffer = %lu , udp socket send data len = %lu", input.length,speexData.length);
+    NSLog(@"input buffer = %lu , udp socket send data len = %lu", (unsigned long)input.length,speexData.length);
     
     [udpSocket sendData:speexData toHost:kDefaultIP port:kDefaultPort withTimeout:-1 tag:0];
     
-    
     //test
-//    j++;
-//    NSData *da = [NSData dataWithBytes:&j length:sizeof(int)];
-//    NSLog(@"----------%d",j);
-//    [udpSocket sendData:da toHost:kDefaultIP port:kDefaultPort withTimeout:-1 tag:0];
+    //j++;
+    //NSData *da = [NSData dataWithBytes:&j length:sizeof(int)];
+    //NSLog(@"----------%d",j);
+    //[udpSocket sendData:da toHost:kDefaultIP port:kDefaultPort withTimeout:-1 tag:0];
 }
 
 #pragma mark - setup AudioQueue

@@ -9,7 +9,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Item-->
+        <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" sceneMemberID="viewController">
@@ -20,76 +20,12 @@
                     <view key="view" contentMode="scaleToFill" id="yLd-G7-JNk">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fea-og-mCn" userLabel="TopView">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="547"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4N6-GR-jdB">
-                                        <rect key="frame" x="150" y="219" width="75" height="109"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="109" id="CqZ-km-MZ3"/>
-                                            <constraint firstAttribute="width" constant="75" id="sPF-gA-v2b"/>
-                                        </constraints>
-                                        <state key="normal" image="record_false"/>
-                                        <connections>
-                                            <action selector="recordOrPause:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Y4h-rK-cgb"/>
-                                        </connections>
-                                    </button>
-                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="正在录音..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iGi-ut-Aqq">
-                                        <rect key="frame" x="146" y="348" width="83.5" height="20.5"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="IfP-gf-Kde">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="547"/>
-                                    </imageView>
-                                </subviews>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstItem="iGi-ut-Aqq" firstAttribute="centerX" secondItem="4N6-GR-jdB" secondAttribute="centerX" id="9Lr-O9-YzF"/>
-                                    <constraint firstItem="4N6-GR-jdB" firstAttribute="centerX" secondItem="Fea-og-mCn" secondAttribute="centerX" id="CHX-Xd-Tf5"/>
-                                    <constraint firstItem="iGi-ut-Aqq" firstAttribute="top" secondItem="4N6-GR-jdB" secondAttribute="bottom" constant="20" id="IoP-81-J1i"/>
-                                    <constraint firstAttribute="trailing" secondItem="IfP-gf-Kde" secondAttribute="trailing" id="KXR-Jj-fVo"/>
-                                    <constraint firstAttribute="bottom" secondItem="IfP-gf-Kde" secondAttribute="bottom" id="gU0-SC-q04"/>
-                                    <constraint firstItem="4N6-GR-jdB" firstAttribute="centerY" secondItem="Fea-og-mCn" secondAttribute="centerY" id="gsy-jU-QZG"/>
-                                    <constraint firstItem="IfP-gf-Kde" firstAttribute="leading" secondItem="Fea-og-mCn" secondAttribute="leading" id="up9-nu-mZA"/>
-                                    <constraint firstItem="IfP-gf-Kde" firstAttribute="top" secondItem="Fea-og-mCn" secondAttribute="top" id="wtx-Ac-ejG"/>
-                                </constraints>
-                            </view>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo_five" translatesAutoresizingMaskIntoConstraints="NO" id="lT2-rm-I3q">
-                                <rect key="frame" x="0.0" y="547" width="375" height="120"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="120" id="Kyt-MB-1Sf"/>
-                                </constraints>
-                            </imageView>
-                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstAttribute="trailing" secondItem="Fea-og-mCn" secondAttribute="trailing" id="58N-TQ-WtH"/>
-                            <constraint firstAttribute="trailing" secondItem="lT2-rm-I3q" secondAttribute="trailing" id="73G-EC-QUk"/>
-                            <constraint firstItem="lT2-rm-I3q" firstAttribute="top" secondItem="Fea-og-mCn" secondAttribute="bottom" id="jAV-Z3-7Uv"/>
-                            <constraint firstItem="lT2-rm-I3q" firstAttribute="leading" secondItem="yLd-G7-JNk" secondAttribute="leading" id="lIG-MN-mDt"/>
-                            <constraint firstItem="Fea-og-mCn" firstAttribute="top" secondItem="yLd-G7-JNk" secondAttribute="top" id="v9s-PL-dW5"/>
-                            <constraint firstItem="Fea-og-mCn" firstAttribute="leading" secondItem="yLd-G7-JNk" secondAttribute="leading" id="xXa-oi-0iH"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="lT2-rm-I3q" secondAttribute="bottom" id="yVl-BD-8LD"/>
-                        </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" id="i1e-HL-hs4"/>
-                    <navigationItem key="navigationItem" id="8Al-R7-37c"/>
-                    <connections>
-                        <outlet property="recorderButton" destination="4N6-GR-jdB" id="aUq-KB-oEz"/>
-                        <outlet property="recorderLable" destination="iGi-ut-Aqq" id="rK2-bM-4yP"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2576" y="136"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="background" width="375" height="667"/>
-        <image name="logo_five" width="801" height="157"/>
-        <image name="record_false" width="75" height="109"/>
-    </resources>
 </document>

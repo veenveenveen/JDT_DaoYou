@@ -266,6 +266,7 @@
 		909BD2321DC87DD4005F540D /* Resourses */ = {
 			isa = PBXGroup;
 			children = (
+				90A907E11DD4399F00B1B733 /* Images */,
 				903C90F61D3000DE000EAF08 /* Info.plist */,
 				903C90F11D3000DE000EAF08 /* Assets.xcassets */,
 			);
@@ -437,12 +438,27 @@
 			path = speex;
 			sourceTree = "<group>";
 		};
+		90A907E01DD419DF00B1B733 /* Echo */ = {
+			isa = PBXGroup;
+			children = (
+				904B5B491DD0616200C01D8A /* HTEchoCanceller.h */,
+				904B5B4A1DD0616200C01D8A /* HTEchoCanceller.m */,
+			);
+			name = Echo;
+			sourceTree = "<group>";
+		};
+		90A907E11DD4399F00B1B733 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Images;
+			sourceTree = "<group>";
+		};
 		90AC64501D30ABF10020CB76 /* Class */ = {
 			isa = PBXGroup;
 			children = (
+				90A907E01DD419DF00B1B733 /* Echo */,
 				909FF99E1DCC4EDB004C1F2C /* Codec */,
-				904B5B491DD0616200C01D8A /* HTEchoCanceller.h */,
-				904B5B4A1DD0616200C01D8A /* HTEchoCanceller.m */,
 				909BD20C1DC8434C005F540D /* HTRecorder.h */,
 				909BD20B1DC8434C005F540D /* HTRecorder.m */,
 			);

@@ -55,7 +55,7 @@
 - (IBAction)recordOrPause:(id)sender {
     if (self.recorder.isRecording) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.recorderButton setImage:[UIImage imageNamed:@"record_false"] forState:UIControlStateNormal];
+            [self.recorderButton setImage:[UIImage imageNamed:@"mic0"] forState:UIControlStateNormal];
             self.recorderLable.hidden = YES;
         });
 
@@ -64,7 +64,7 @@
     }
     else if (!self.recorder.isRecording) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.recorderButton setImage:[UIImage imageNamed:@"record_true"] forState:UIControlStateNormal];
+            [self.recorderButton setImage:[UIImage imageNamed:@"mic1"] forState:UIControlStateNormal];
             self.recorderLable.hidden = NO;
         });
         
